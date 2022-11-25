@@ -1,0 +1,35 @@
+body{
+    background-color: #ededee;
+    color: #474747;
+}
+h1{
+    text-align: center;
+}
+.form-control{
+    width: 50% !important;
+    display: inline;
+}
+
+.cards-container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card{
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+}
+.card-body{
+    width: 60%;
+}
+
+.img-container{
+    width: 40%;
+}
+
+.img-container img{
+    width: 100%;
+}
