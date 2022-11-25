@@ -16,8 +16,6 @@ def scraping(search_input):
     json_result = soup.findAll('script')[36].text.strip()[30:-64]
     format_json = json.loads(json_result)
     aux1 = format_json['props']['offerResultData']['offerList']
-    data = []
-    list_aux = []
     search_results =[]
 
     ##
@@ -33,7 +31,7 @@ def scraping(search_input):
 
             'Score':float(i['reviews'].get('productScore',0)),
 
-            'Price':i['promotionInfoVO']['localOriginalPriceFromStr'],
+            'Price':i['promotionInfoVO']['localOriginalPriceFromStr'][1:],
 
             'Image':i['image']['mainImage']
 
@@ -41,19 +39,38 @@ def scraping(search_input):
 
     ##
 
-    print(search_results)
+    # print(search_results)
 
     data_json =json.dumps(search_results) #json
 
-    print(data_json)
+    # print(data_json)
     return(search_results)
+
+def tracked_product(tracked_product):
+        product_elements = tracked_product[0].split('*')
+        product_elements_dict= {
+            "ID": product_elements[0],
+            "Title": product_elements[1],
+            "Score": product_elements[2],
+            "Price": product_elements[3],
+            "Image": product_elements[4]
+        }
+        return product_elements_dict
+
 def home(request):
-    product = Product.objects.all()
+    # product = Product.objects.all()
     if request.method == 'POST':
-        search_input = request.POST["input-product"]
-        if not search_input == "":
-            data_frame=scraping(search_input)
-            obj = Search(search=search_input)
-            obj.save()
-            return render(request , "home.html", {"product":data_frame})
+        # data_frame =[]
+        if "search_btn" in request.POST:
+            search_input = request.POST["input-product"]
+            if not search_input == "":
+                data_frame=scraping(search_input)
+                obj = Search(search=search_input)
+                obj.save()
+                return render(request , "home.html", {"product":data_frame})
+        elif "track_btn" in request.POST:
+            product_track = request.POST.getlist("product_tracked")
+            product_tracked = tracked_product(product_track)
+            print(product_tracked)
+            return render(request , "home.html", {"product_tracked":product_tracked})
     return render(request , "home.html")
